@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <title>手机版</title>
+            <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+            <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+            <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+            <style type="text/css">
+                html,
+                body {
+                    margin: 0;
+                    height: 100%;
+                }
+                .navbar{
+                    margin-bottom:0px;
+                }
+                /* 加载 */
+                #loading0,#loading1{z-index:1;padding:5px 0 5px 9px;background:#c44;left:0;top:0;width:90px;color:#fff;}
+                /* 表格 */
+                .table{margin-bottom: 2px;width:100%;}
+                /* 商城的名称 */
+                .mystyle a{padding-top:6px;padding-bottom:6px;font-size:17px;font-weight:bold;}
+            </style>
+        </head>
+        <body onkeydown="keyDown(event);">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="navbar-header" style="float:none;">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-lg" id="search0" value="手机">
+                        <span class="input-group-addon btn" onclick="search0();" style="display:none;">搜索</span>
+                        <span class="input-group-addon btn btn-primary" onclick="searchAll(0);">搜索</span>
+                    </div>
+                </div>
+            </nav>
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="navbar-header addradio" style="folat:none;">
+                    <a class="navbar-brand" href="#">请选择商城</a>
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" id="malls"></ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <iframe src="" style="visibility:inherit; width:100%;z-index:1;" id="f1" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" onload="iFrameHeight(150)">
+            </iframe>
+        </body>
+        <script type="text/javascript">
+        //iFrame高度
+        function iFrameHeight(num) {
+            var ifm = $("iframe");
+            var h = document.body.clientHeight - num;
+            if (ifm != null && h > ifm.height()) {
+                ifm.height(h);
+            }
+        }
+        $(window).resize(iFrameHeight(150));
+        $(document).ready(iFrameHeight(150));
+        //加载选项
+        $(function(){
+            window.arr = [
+                ["京东","http://so.m.jd.com/ware/search.action?keyword=mykey"],
+                //没有价格参数
+                ["一号店","http://search.m.yhd.com/search/c0-0/kmykey/mb0-pr-a-d1-t-f06"],
+                //按自营
+                ["淘宝","https://s.m.taobao.com/h5?q=mykey&search=提交查询&tab=all"],
+                //按价格
+                ["国美电器","http://m.gome.com.cn/category.html?from=1&scat=3&key_word=mykey&sort_by=1"],
+                //价格低到高
+                ["天猫","https://list.tmall.com/search_product.htm?q=mykey"],
+                //跳转PC版
+                ["当当网","http://search.m.dangdang.com/search.php?keyword=mykey"],
+                //没价格参数
+                ["新蛋中国","http://m.newegg.cn/Search.aspx?keyword=mykey&sort=30"],
+                //按价格
+                ["华强北商城","http://m.okhqb.com/search.html?q=mykey&sort=price"],
+                //按价格
+                ["乐村淘","http://www.lecuntao.com/wap/tmpl/product_list.html?keyword=mykey"]
+                //没有价格参数，
+            ]
+            window.iheight = $('#f1').height();
+            //下拉
+            var html = '';
+            for(var i=0;i<arr.length;i++){
+                if(i!=0)html += '<li class="divider"></li>';
+                html += '<li><a href="javascript:void(0);" link="'+arr[i][1]+'" onclick="search1(this);">'+arr[i][0]+'</a></li>';
+            }
+            $('#malls').html(html);
+            $('.caret').before(arr[0][0]);
+            //按钮
+            var html2 = '';
+            for(var j=0;j<arr.length;j++){
+                html2 += '<label class="radio checkbox-inline" style="margin-top:10px;margin-left:20px;" link="'+arr[j][1]+'" onclick="search1(this);">';
+                html2 += '<input type="radio" name="optionsRadiosinline" id="optionsRadios2" value="option1" checked>'+arr[j][0]+'</label>';
+            }
+            $('.addradio').after(html2);
+            
+            //前三个
+            var html3 = '';
+            html3 += '<table style="display:none;height:'+iheight+'px" border="1" id="table" class="table"><tr>';
+            for(var n=0;n<3;n++){
+                html3 += '<td>';
+                html3 += '<nav class="navbar navbar-default mystyle" role="navigation">';
+                html3 += '<div class="navbar-header">';
+                html3 += '<a class="navbar-brand" href="#" style="color:#428bca;">';
+                switch(n){case 0:html3 += arr[0][0];break;case 1:html3 += arr[1][0];break;default:html3 += arr[2][0];}
+                html3 += '</a>';
+                html3 += '</div>';
+                html3 += '<nav>';
+                switch(n){case 0:html3 += '';break;case 1:html3 += '<div id="loading0">正在加载</div>';break;default:html3 += '<div id="loading1">正在加载</div>';}
+                html3 +='<iframe src="" style="height:'+iheight+'px;visibility:inherit; width:100%;z-index:1;"';
+                switch(n){case 0:html3 += ' id="f2" ';break;case 1:html3 += ' id="f3" ';break;default:html3 += ' id="f4" ';}
+                html3 += 'frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" >';
+                html3 += '</iframe>';
+                html3 += '</td>';
+            }
+            html3 += '</tr></table>';
+            $('#f1').after(html3);
+            //一开始打开前三个
+            search0();
+        });
+        //前三个
+        function search0(){
+            $('#f1').css('display','none');
+            KeyAndReset();
+            $('#table').attr('style','width:100%;');
+            var f2,f3,f4;
+            f2 = arr[0][1];
+            f3 = arr[1][1];
+            f4 = arr[2][1];
+            $('#f2').attr("src",myrep(f2,keyword));
+            myload('loading0','f3',f3,2000);
+            myload('loading1','f4',f4,4000);
+        }
+        //搜索全部
+        function searchAll(again){
+            //重置页面
+            $('.table2').remove();
+            //前三个
+            search0();
+            //三个以后 开始
+            var html_t = '';
+            var arrList = [];
+            //三个一组
+            for(var k=0,len=arr.length;k<len;k+=3){
+                arrList.push(arr.slice(k,k+3));
+            }
+            for(var l=1;l<arrList.length;l++){
+                html_t += '<table border="1" class="table table2">';
+                    html_t += '<tr>';
+                        for(var m=0;m<arrList[l].length;m++){
+                            var source = myrep(arrList[l][m][1],keyword);
+                            var mname = arrList[l][m][0];
+                            html_t += '<td>';
+                            //商城的名称
+                            html_t += '<nav class="navbar navbar-default mystyle" role="navigation">';
+                            html_t += '<div class="navbar-header">';
+                            html_t += '<a class="navbar-brand" href="#" style="color:#428bca;">'+mname+'</a>';
+                            html_t += '</div>';
+                            html_t += '<nav>';
+                            html_t += '<iframe src="'+source+'" style="visibility:inherit; width:100%;z-index:1;height:'+iheight+'px;" frameborder="0" scrolling="yes" marginheight="0" marginwidth="0" ';
+                            html_t += '></iframe>';
+                            html_t += '</td>';
+                        }
+                    html_t += '</tr>';
+                html_t += '</table>';
+            }
+            $('#table').after(html_t);
+            //苏宁易购有时候一次不出现，需要再点击一次
+            if(again == 0){
+                setTimeout(function() { 
+                    searchAll(1);
+                },1000)
+            }else{ 
+                return false;
+            } 
+        }
+        //下拉框搜索
+        function search1(_this){
+            //重置页面
+            $('.table2').remove();
+            //搜索框关键字
+            keyword = $('#search0').val();
+            keyword = encodeURI(keyword);
+            //隐藏和显示
+            $('#f1').css('display','block');
+            $('#table').css('display','none');
+            //替换列表框上的字
+            $('.caret').parent().empty('').html('<b class="caret">');
+            var malls = $(_this).text();
+            $('.caret').before(malls);
+            var link2 = $(_this).attr('link');
+            link2 = myrep(link2,keyword);
+            //单独打开的，特殊都在这里处理
+            $('#f1').attr("src",link2);
+        }
+        //更改链接关键字
+        function myrep(l,t){
+            r = new RegExp('mykey','g');
+            return l.replace(r,t);
+        }
+        function myload(load,f,link,time){
+            setTimeout(function(){
+                $('#'+load).css('display','none');
+                $('#'+f).attr("src",myrep(link,keyword));
+                $('#'+f).css('display','block');
+            },time);
+        }
+        function KeyAndReset(){
+            //搜索框关键字
+            keyword = $('#search0').val();
+            //重置
+            $('#loading0').css('display','block');
+            $('#f3').css('display','none');
+            $('#loading1').css('display','block');
+            $('#f4').css('display','none');
+        }
+        </script>
+</html>
