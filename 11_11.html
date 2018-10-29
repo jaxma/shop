@@ -73,7 +73,7 @@
                 //价格低到高
                 ["乐村淘","https://www.lecuntao.com/wap/tmpl/product_list.html?keyword=mykey"],
                 //没有价格参数，
-                ["当当网","https://search.m.dangdang.com/search.php?keyword=mykey"],
+                ["唯品会","https://m.vip.com/searchlist.html?q=mykey"],
                 //没价格参数
                 // ["新蛋中国","http://m.newegg.cn/Search.aspx?keyword=mykey&sort=30"],
                 //按价格
@@ -170,14 +170,14 @@
                 html_t += '</table>';
             }
             $('#table').after(html_t);
-            //苏宁易购有时候一次不出现，需要再点击一次
-            if(again == 0){
-                setTimeout(function() { 
-                    searchAll(1);
-                },1000)
-            }else{ 
-                return false;
-            } 
+            // //苏宁易购有时候一次不出现，需要再点击一次
+            // if(again == 0){
+            //     setTimeout(function() { 
+            //         searchAll(1);
+            //     },1000)
+            // }else{ 
+            //     return false;
+            // } 
         }
         //下拉框搜索
         function search1(_this){
